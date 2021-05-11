@@ -1,7 +1,6 @@
 import cv2
 import os
 from os import walk
-import sys
 
 import numpy as np
 from pathlib import Path
