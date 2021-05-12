@@ -1,5 +1,5 @@
-from project.src.model import BrickModel
-from project.src.crop import get_bricket_coords
+from src.icp_model import ICPModel
+from src.crop import get_bricket_coords
 
 import os
 from os import walk
@@ -16,15 +16,15 @@ from pathlib import Path
 from torch.utils.data import Dataset, DataLoader
 
 # cam1
-#best_checkpoint = 'tb_logs/cam1/tf_efficientnet_b5_ns/version_2/checkpoints/tf_efficientnet_b5_ns_cam1_epoch=6_val_loss=0.132_val_acc=0.967_val_f1_epoch=0.967.ckpt'
+# best_checkpoint = 'tb_logs/cam1/tf_efficientnet_b5_ns/version_2/checkpoints/tf_efficientnet_b5_ns_cam1_epoch=6_val_loss=0.132_val_acc=0.967_val_f1_epoch=0.967.ckpt'
 
 # cam2
 best_checkpoint = 'tb_logs/cam2/tf_efficientnet_b5_ns/version_4/checkpoints/tf_efficientnet_b5_ns_cam2_epoch=7_val_loss=0.226_val_acc=0.949_val_f1_epoch=0.949.ckpt'
 
 # simpsons
-#best_checkpoint = 'tb_logs/simp_data/tf_efficientnet_b5_ns/version_0/checkpoints/tf_efficientnet_b5_ns_simp_data_epoch=2_val_loss=0.013_val_acc=0.998_val_f1_epoch=0.998.ckpt'
+# best_checkpoint = 'tb_logs/simp_data/tf_efficientnet_b5_ns/version_0/checkpoints/tf_efficientnet_b5_ns_simp_data_epoch=2_val_loss=0.013_val_acc=0.998_val_f1_epoch=0.998.ckpt'
 
-best_model = BrickModel.load_from_checkpoint(checkpoint_path=best_checkpoint)
+best_model = ICPModel.load_from_checkpoint(checkpoint_path=best_checkpoint)
 best_model = best_model.to("cuda")
 best_model.eval()
 best_model.freeze()

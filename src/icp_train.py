@@ -1,7 +1,6 @@
 from src.icp_datamodule import ICPDataModule
 from src.icp_model import ICPModel
 
-from pytorch_lightning.metrics import ConfusionMatrix
 
 from pathlib import Path
 
@@ -61,9 +60,6 @@ def main():
                              'im_size': 600,
                              'im_size_test': 600, 'batch_size': 2}
 
-    # best model
-    # cam1 tf_efficientnet_b5_ns
-
     models = [tf_efficientnet_b4_ns]
 
     # test models cuda memory
@@ -75,8 +71,7 @@ def main():
     images_ext = 'jpg'
 
     # train parameters
-    init_lr = 0.00015
-    # init_lr = 1e-5
+    init_lr = 1e-5
     max_epochs = 500
     augment_p = 0.7
     progress_bar_refresh_rate = 10
@@ -104,8 +99,7 @@ def main():
         dm.setup()
 
         # Init our model
-        confmat = ConfusionMatrix(num_classes=dm.num_classes)
-        model = ICPModel(model_type, dm.num_classes, confmat=confmat, learning_rate=init_lr)
+        model = ICPModel(model_type, dm.num_classes, learning_rate=init_lr)
 
         # Initialize a trainer
         early_stop_callback = EarlyStopping(
@@ -140,17 +134,11 @@ def main():
 
         trainer = pl.Trainer(max_epochs=max_epochs,
                              progress_bar_refresh_rate=progress_bar_refresh_rate,
-                             gpus=1,
+                             # gpus=1,
+                             auto_select_gpus=True,
                              logger=logger,
-                             # auto_lr_find=True,
                              callbacks=callbacks)
 
-        # lr_finder = trainer.tuner.lr_find(model, train_dataloader=dm.train_dataloader(),
-        #                                   val_dataloaders=dm.val_dataloader())
-        # fig = lr_finder.plot(suggest=True)  # Plot
-        # fig.show()
-        #
-        # print(lr_finder.suggestion())
 
         # Train the model ⚡🚅⚡
         trainer.fit(model, dm)
