@@ -1,7 +1,6 @@
 from src.icp_datamodule import ICPDataModule
 from src.icp_model import ICPModel
 
-
 from pathlib import Path
 
 # lightning related imports
@@ -13,153 +12,130 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 import datetime
 
 
+class ICPTrainer():
+    def __init__(self,
+                 models=[],
+                 data_dir='data',
+                 images_ext='jpg',
+                 init_lr=1e-5,
+                 max_epochs=500,
+                 augment_p=0.7,
+                 progress_bar_refresh_rate=10,
+                 early_stop_patience=6):
+        super().__init__()
+        self.models = models
+        self.data_dir = data_dir
+        self.images_ext = images_ext
+        self.init_lr = init_lr
+        self.max_epochs = max_epochs
+        self.augment_p = augment_p
+        self.augment_p = augment_p
+        self.progress_bar_refresh_rate = progress_bar_refresh_rate
+        self.early_stop_patience = early_stop_patience
+
+        self.models_for_training = []
+        for m in self.models:
+            model_data = {'model': m}
+
+            dm = ICPDataModule(data_dir=self.data_dir,
+                               augment_p=self.augment_p,
+                               images_ext=self.images_ext,
+                               model_type=model_data['model']['model_type'],
+                               batch_size=model_data['model']['batch_size'],
+                               input_resize=model_data['model']['im_size'],
+                               input_resize_test=model_data['model']['im_size_test'],
+                               mean=model_data['model']['mean'],
+                               std=model_data['model']['std'])
+
+            # To access the x_dataloader we need to call prepare_data and setup.
+            # dm.prepare_data()
+            dm.setup()
+
+            # Init our model
+            model = ICPModel(model_data['model']['model_type'], dm.num_classes, learning_rate=self.init_lr)
+
+            # Initialize a trainer
+            early_stop_callback = EarlyStopping(
+                monitor='val_loss',
+                patience=self.early_stop_patience,
+                verbose=True,
+                mode='min'
+            )
+
+            # logs for tensorboard
+            experiment_name = model_data['model']['model_type']
+            logger = TensorBoardLogger('tb_logs/', name=experiment_name)
+
+            checkpoint_name = experiment_name + '_' + '_{epoch}_{val_loss:.3f}_{val_acc:.3f}_{val_f1_epoch:.3f}'
+
+            checkpoint_callback_loss = ModelCheckpoint(monitor='val_loss',
+                                                       mode='min',
+                                                       filename=checkpoint_name,
+                                                       verbose=True,
+                                                       save_top_k=1,
+                                                       save_last=False)
+
+            checkpoint_callback_acc = ModelCheckpoint(monitor='val_acc',
+                                                      mode='max',
+                                                      filename=checkpoint_name,
+                                                      verbose=True,
+                                                      save_top_k=1,
+                                                      save_last=False)
+
+            checkpoints = [checkpoint_callback_acc, checkpoint_callback_loss, early_stop_callback]
+            callbacks = checkpoints
+
+            trainer = pl.Trainer(max_epochs=self.max_epochs,
+                                 progress_bar_refresh_rate=self.progress_bar_refresh_rate,
+                                 gpus=1,
+                                 logger=logger,
+                                 callbacks=callbacks)
+
+            model_data['icp_datamodule'] = dm
+            model_data['icp_model'] = model
+            model_data['icp_trainer'] = trainer
+
+            self.models_for_training.append(model_data)
+
+    def fit_test(self):
+
+        for model in self.models_for_training:
+            print('##################### START Training ' + model['model']['model_type'] + '... #####################')
+
+            # Train the model ⚡🚅⚡
+            model['icp_trainer'].fit(model['icp_model'], model['icp_datamodule'])
+
+            # Evaluate the model on the held out test set ⚡⚡
+            results = model['icp_trainer'].test()[0]
+
+            # save test results
+            best_checkpoint = 'best_checkpoint: ' + model['icp_trainer'].checkpoint_callback.best_model_path
+            results['best_checkpoint'] = best_checkpoint
+
+            filename = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '__test_acc_' + str(
+                round(results.get('test_acc'), 4)) + '.txt'
+
+            path = 'test_logs/' + model['model']['model_type']
+            Path(path).mkdir(parents=True, exist_ok=True)
+
+            with open(path + '/' + filename, 'w+') as f:
+                print(results, file=f)
+
+            print('##################### END Training ' + model['model']['model_type'] + '... #####################')
+
+
 def main():
-    # models
-    vgg16_bn = {'model_type': 'vgg16_bn', 'use_normalize': True, 'half_normalize': False, 'im_size': 224,
-                'im_size_test': 224, 'batch_size': 16}
-
-    senet154 = {'model_type': 'senet154', 'use_normalize': True, 'half_normalize': False, 'im_size': 224,
-                'im_size_test': 224, 'batch_size': 16}
-
-    inceptionv4 = {'model_type': 'inceptionv4', 'use_normalize': True, 'half_normalize': False, 'im_size': 299,
-                   'im_size_test': 299, 'batch_size': 16}
-
-    efficientnet_b3 = {'model_type': 'efficientnet-b3', 'use_normalize': True, 'half_normalize': False, 'im_size': 512,
-                       'im_size_test': 512, 'batch_size': 8}
-
-    efficientnet_b4 = {'model_type': 'efficientnet-b4', 'use_normalize': True, 'half_normalize': False, 'im_size': 512,
-                       'im_size_test': 512, 'batch_size': 6}
-
-    efficientnet_b6 = {'model_type': 'efficientnet-b6', 'use_normalize': True, 'half_normalize': False, 'im_size': 512,
-                       'im_size_test': 512, 'batch_size': 4}
-
-    dm_nfnet_f4 = {'model_type': 'dm_nfnet_f4', 'use_normalize': True, 'half_normalize': False, 'im_size': 384,
-                   'im_size_test': 512, 'batch_size': 1}
-
-    vit_base_patch16_384 = {'model_type': 'vit_base_patch16_384', 'use_normalize': True, 'half_normalize': True,
-                            'im_size': 384,
-                            'im_size_test': 384, 'batch_size': 8}
-
-    tf_efficientnet_b3_ns = {'model_type': 'tf_efficientnet_b3_ns', 'use_normalize': True, 'half_normalize': False,
-                             'im_size': 300,
-                             'im_size_test': 300, 'batch_size': 16}
-
-    tf_efficientnet_b4_ns = {'model_type': 'tf_efficientnet_b4_ns', 'use_normalize': True, 'half_normalize': False,
+    tf_efficientnet_b4_ns = {'model_type': 'tf_efficientnet_b4_ns',
                              'im_size': 380,
-                             'im_size_test': 380, 'batch_size': 8}
-
-    tf_efficientnet_b5_ns = {'model_type': 'tf_efficientnet_b5_ns', 'use_normalize': True, 'half_normalize': False,
-                             'im_size': 456,
-                             'im_size_test': 456, 'batch_size': 6}
-
-    tf_efficientnet_b6_ns = {'model_type': 'tf_efficientnet_b6_ns', 'use_normalize': True, 'half_normalize': False,
-                             'im_size': 528,
-                             'im_size_test': 528, 'batch_size': 3}
-
-    tf_efficientnet_b7_ns = {'model_type': 'tf_efficientnet_b7_ns', 'use_normalize': True, 'half_normalize': False,
-                             'im_size': 600,
-                             'im_size_test': 600, 'batch_size': 2}
+                             'im_size_test': 380,
+                             'batch_size': 8,
+                             'mean': [0.485, 0.456, 0.406],
+                             'std': [0.229, 0.224, 0.225]}
 
     models = [tf_efficientnet_b4_ns]
 
-    # test models cuda memory
-    # models.append(tf_efficientnet_b7_ns)
-
-    #############################################################
-
-    data_dir = Path('data_simpsons')
-    images_ext = 'jpg'
-
-    # train parameters
-    init_lr = 1e-5
-    max_epochs = 500
-    augment_p = 0.7
-    progress_bar_refresh_rate = 10
-    early_stop_patience = 6
-
-    # Init our data pipeline
-
-    for m in models:
-        print('####################### START Training ' + m['model_type'] + '... #######################')
-
-        model_type = m['model_type']
-        batch_size = m['batch_size']
-        im_size = m['im_size']
-        im_size_test = m['im_size_test']
-        use_normalize = m['use_normalize']
-        half_normalize = m['half_normalize']
-
-        dm = ICPDataModule(model_type=model_type, batch_size=batch_size, data_dir=data_dir, input_resize=im_size,
-                             input_resize_test=im_size_test,
-                             use_normalize=use_normalize, half_normalize=half_normalize, augment_p=augment_p,
-                             images_ext=images_ext)
-
-        # To access the x_dataloader we need to call prepare_data and setup.
-        # dm.prepare_data()
-        dm.setup()
-
-        # Init our model
-        model = ICPModel(model_type, dm.num_classes, learning_rate=init_lr)
-
-        # Initialize a trainer
-        early_stop_callback = EarlyStopping(
-            monitor='val_loss',
-            patience=early_stop_patience,
-            verbose=True,
-            mode='min'
-        )
-
-        # logs for tensorboard
-        experiment_name = model_type
-        logger = TensorBoardLogger('tb_logs/', name=experiment_name)
-
-        checkpoint_name = experiment_name + '_' + '_{epoch}_{val_loss:.3f}_{val_acc:.3f}_{val_f1_epoch:.3f}'
-
-        checkpoint_callback_loss = ModelCheckpoint(monitor='val_loss', mode='min',
-                                                   filename=checkpoint_name,
-                                                   verbose=True, save_top_k=1,
-                                                   save_last=False)
-        checkpoint_callback_acc = ModelCheckpoint(monitor='val_acc', mode='max',
-                                                  filename=checkpoint_name,
-                                                  verbose=True, save_top_k=1,
-                                                  save_last=False)
-
-        # checkpoint_callback_f1 = ModelCheckpoint(monitor='val_f1_epoch', mode='max',
-        #                                          filename=checkpoint_name,
-        #                                          verbose=True, save_top_k=1,
-        #                                          save_last=True)
-
-        checkpoints = [checkpoint_callback_acc, checkpoint_callback_loss, early_stop_callback]
-        callbacks = checkpoints
-
-        trainer = pl.Trainer(max_epochs=max_epochs,
-                             progress_bar_refresh_rate=progress_bar_refresh_rate,
-                             # gpus=1,
-                             auto_select_gpus=True,
-                             logger=logger,
-                             callbacks=callbacks)
-
-
-        # Train the model ⚡🚅⚡
-        trainer.fit(model, dm)
-
-        # Evaluate the model on the held out test set ⚡⚡
-        results = trainer.test()[0]
-
-        # save test results
-        best_checkpoint = 'best_checkpoint: ' + trainer.checkpoint_callback.best_model_path
-        results['best_checkpoint'] = best_checkpoint
-
-        filename = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '__test_acc_' + str(
-            round(results.get('test_acc'), 4)) + '.txt'
-
-        path = 'test_logs/' + model_type
-        Path(path).mkdir(parents=True, exist_ok=True)
-
-        with open(path + '/' + filename, 'w+') as f:
-            print(results, file=f)
-
-        print('####################### END Training ' + m['model_type'] + '... #######################')
+    trainer = ICPTrainer(models=models, data_dir='data_simpsons')
+    trainer.fit_test()
 
 
 if __name__ == '__main__':

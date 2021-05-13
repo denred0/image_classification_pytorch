@@ -2,7 +2,7 @@ import numpy as np
 import pickle
 
 # pytorch related imports
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -17,16 +17,24 @@ from pathlib import Path
 
 
 class ICPDataModule(pl.LightningDataModule):
-    def __init__(self, model_type, batch_size, data_dir, input_resize, input_resize_test,
-                 use_normalize=True, half_normalize=False,
-                 augment_p=0.7, images_ext='jpg'):
+    def __init__(self, model_type,
+                 batch_size,
+                 data_dir,
+                 input_resize,
+                 input_resize_test,
+                 mean,
+                 std,
+                 use_normalize=True,
+                 half_normalize=False,
+                 augment_p=0.7,
+                 images_ext='jpg'):
         super().__init__()
         self.data_dir = data_dir
         self.batch_size = batch_size
         self.input_resize = input_resize
         self.input_resize_test = input_resize_test
-        self.use_normalize = use_normalize
-        self.half_normalize = half_normalize
+        self.mean = mean,
+        self.std = std,
         self.augment_p = augment_p
         self.images_ext = images_ext
 
@@ -38,13 +46,9 @@ class ICPDataModule(pl.LightningDataModule):
     def _get_transforms(self):
         transforms = []
 
-        if self.use_normalize:
-            if self.half_normalize:
-                transforms += [A.Normalize(mean=[0.5, 0.5, 0.5],
-                                           std=[0.5, 0.5, 0.5])]
-            else:
-                transforms += [A.Normalize(mean=[0.485, 0.456, 0.406],
-                                           std=[0.229, 0.224, 0.225])]
+        if self.mean is not None:
+            transforms += [A.Normalize(mean=self.mean, std=self.std)]
+
         transforms += [ToTensorV2(transpose_mask=True)]
         preprocessing = A.Compose(transforms)
 
@@ -109,14 +113,14 @@ class ICPDataModule(pl.LightningDataModule):
 
         if stage == 'fit' or stage is None:
             self.dataset_train = ICPDataset(
-                train_data,
-                self.input_resize,
+                data=train_data,
+                input_resize=self.input_resize,
                 augments=self.augments,
                 preprocessing=self.preprocessing)
 
             self.dataset_val = ICPDataset(
-                val_data,
-                self.input_resize,
+                data=val_data,
+                input_resize=self.input_resize,
                 preprocessing=self.preprocessing)
 
             self.dims = tuple(self.dataset_train[0][0].shape)
@@ -124,9 +128,10 @@ class ICPDataModule(pl.LightningDataModule):
         # Assign test dataset for use in dataloader(s)
         if stage == 'test' or stage is None:
             self.dataset_test = ICPDataset(
-                test_data,
-                self.input_resize_test,
+                data=test_data,
+                input_resize=self.input_resize_test,
                 preprocessing=self.preprocessing)
+
             self.dims = tuple(self.dataset_test[0][0].shape)
 
     def train_dataloader(self):
