@@ -16,3 +16,4 @@ models = [tf_efficientnet_b4_ns]
 trainer = ICPTrainer(models=models, data_dir='data_simpsons')
 trainer.fit_test()
 ```
+
