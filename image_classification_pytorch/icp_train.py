@@ -1,5 +1,5 @@
-from ImageClassificationPytorch.icp_datamodule import ICPDataModule
-from ImageClassificationPytorch.icp_model import ICPModel
+from image_classification_pytorch.icp_datamodule import ICPDataModule
+from image_classification_pytorch.icp_model import ICPModel
 
 from pathlib import Path
 
