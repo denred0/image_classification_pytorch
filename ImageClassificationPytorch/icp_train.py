@@ -1,5 +1,5 @@
-from src.icp_datamodule import ICPDataModule
-from src.icp_model import ICPModel
+from ImageClassificationPytorch.icp_datamodule import ICPDataModule
+from ImageClassificationPytorch.icp_model import ICPModel
 
 from pathlib import Path
 
@@ -102,7 +102,7 @@ class ICPTrainer():
         for model in self.models_for_training:
             print('##################### START Training ' + model['model']['model_type'] + '... #####################')
 
-            # Train the model ⚡🚅⚡
+            # Train the model ⚡g🚅⚡
             model['icp_trainer'].fit(model['icp_model'], model['icp_datamodule'])
 
             # Evaluate the model on the held out test set ⚡⚡

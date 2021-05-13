@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
-from src.icp_dataset import ICPDataset
+from ImageClassificationPytorch.icp_dataset import ICPDataset
 
 import pytorch_lightning as pl
 import albumentations as A
