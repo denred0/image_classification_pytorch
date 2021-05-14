@@ -8,59 +8,50 @@ Use pretrained models to train your data.
 
 ## :closed_book: Table of content
 - [What's New](#whats-new)
-- [Introduction](#introduction)
+- [Installation](#installation)
+- [Quick start](#quick-start)
+- [Prediction](#prediction)
+- [Data preparation](#data-preparation)
 - [Models](#models)
-- [Features](#features)
-- [Results](#results)
-- [Getting Started (Documentation)](#getting-started-documentation)
-- [Train, Validation, Inference Scripts](#train-validation-inference-scripts)
-- [Awesome PyTorch Resources](#awesome-pytorch-resources)
-- [Licenses](#licenses)
-- [Citing](#citing)
+- [License](#license)
 
 ## :clipboard: What's New <a name="whats-new"></a>
 
 
-## :computer: Installation
+## :computer: Installation <a name="installation"></a>
 
 ```python
 pip install image-classification-pytorch
 ```
 
-## ✨ Quick start
-
-## :telescope: Inference
-
-## :chart_with_downwards_trend: Models
-
-## :file_folder: Data preparation
-
-## 🛡️ License
-
-
-
+## ✨ Quick start <a name="quick-start"></a>
 
 ```python
 import image_classification_pytorch as icp
-```
-```python
-# Images of each class in its own folder with the class name. 
-# Examples of folders: homer_simpson, bart_simpson etc. 
-from google.colab import drive
-drive.mount('/content/gdrive')
-!unzip -q /content/gdrive/My\ Drive/datasets/image_classification_pytorch/data_simpsons.zip -d train
-```
-```python
+
 # add model
 tf_efficientnet_b4_ns = {'model_type': 'tf_efficientnet_b4_ns', 'im_size': 380, 'im_size_test': 380, 'batch_size': 8, 'mean': [0.485, 0.456, 0.406], 'std': [0.229, 0.224, 0.225]}
 models = [tf_efficientnet_b4_ns]
-```
-```python
+
 # create trainer
-trainer = ICPTrainer(models=models, data_dir='data_simpsons')
+trainer = ICPTrainer(models=models, data_dir='my_data')
 # start training
 trainer.fit_test()
 ```
+
+## :telescope: Prediction <a name="prediction"></a>
+
+## :file_folder: Data preparation <a name="data-preparation"></a>
+
+## :chart_with_downwards_trend: Models <a name="models"></a>
+
+
+
+## 🛡️ License <a name="license"></a>
+Project is distributed under [MIT License](https://github.com/denred0/image_classification_pytorch/blob/master/LICENSE.txt)
+
+
+
 
 ## Colab Quick start
 [image_classification_pytorch_get_started.ipynb](https://colab.research.google.com/drive/1M7oJDizCOrFTDJz0CaDy-ClvDMUvmlnv?usp=sharing)
