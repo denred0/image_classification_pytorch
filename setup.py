@@ -1,19 +1,19 @@
 from distutils.core import setup
 
-from os import path
-this_directory = path.abspath(path.dirname(__file__))
-with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
+# from os import path
+# this_directory = path.abspath(path.dirname(__file__))
+# with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+#     long_description = f.read()
 
 
 setup(
   name = 'image_classification_pytorch',         # How you named your package folder (MyLib)
   packages = ['image_classification_pytorch'],   # Chose the same as "name"
-  version = '0.0.4',      # Start with a small number and increase it with every change you make
+  version = '0.0.8',      # Start with a small number and increase it with every change you make
   license='MIT',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
   description = 'Image classification with pretrained models in Pytorch',   # Give a short description about your library
-  long_description = long_description,
-  long_description_content_type = 'text/markdown',
+  # long_description = long_description,
+  # long_description_content_type = 'text/markdown',
   author = 'Denis Potapov',                   # Type in your name
   author_email = 'potapovdenisdmit@gmail.com',      # Type in your E-Mail
   url = 'https://github.com/denred0/image_classification_pytorch',   # Provide either the link to your github or to your website
@@ -24,7 +24,7 @@ setup(
           'pytorch_lightning',
           'torch',
           'sklearn',
-          'albumentations==0.5.2',
+          'albumentations==0.5.1',
           'opencv-python',
           'torchmetrics',
           'timm',

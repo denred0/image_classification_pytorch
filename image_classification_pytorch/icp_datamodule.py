@@ -84,7 +84,7 @@ class ICPDataModule(pl.LightningDataModule):
         self.num_classes = len(np.unique(encoded))
 
         # save labels dict to file
-        with open('label_encoder/label_encoder.pkl', 'wb') as le_dump_file:
+        with open('label_encoder.pkl', 'wb') as le_dump_file:
             pickle.dump(label_encoder, le_dump_file)
 
         train_files, val_test_files = train_test_split(train_val_files, test_size=0.3, stratify=train_val_labels)
