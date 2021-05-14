@@ -3,7 +3,7 @@
 Library for quick training models for image classification.
 
 
-## :closed_book: Table of content
+### :closed_book: Table of content
 - [What's New](#whats-new)
 - [Installation](#installation)
 - [Quick start](#quick-start)
@@ -12,17 +12,17 @@ Library for quick training models for image classification.
 - [Models](#models)
 - [License](#license)
 
-## :clipboard: What's New <a name="whats-new"></a>
+### :clipboard: What's New <a name="whats-new"></a>
 
 
-## :computer: Installation <a name="installation"></a>
+### :computer: Installation <a name="installation"></a>
 
 ```python
 pip install image-classification-pytorch
 ```
 ---
 
-## ✨ Quick Start <a name="quick-start"></a>
+### ✨ Quick Start <a name="quick-start"></a>
 
 ```python
 import image_classification_pytorch as icp
@@ -42,9 +42,9 @@ trainer.fit_test()
 
 ---
 
-## :telescope: Prediction <a name="prediction"></a>
+### :telescope: Prediction <a name="prediction"></a>
 
-## :file_folder: Data Preparation <a name="data-preparation"></a>
+### :file_folder: Data Preparation <a name="data-preparation"></a>
 Prepare data for training in the following format
 
     ├── animals                      # Data folder
@@ -55,9 +55,9 @@ Prepare data for training in the following format
         ├── ...
  
 ---
-## :chart_with_downwards_trend: Models <a name="models"></a>
+### :chart_with_downwards_trend: Models <a name="models"></a>
 
 
 
-## 🛡️ License <a name="license"></a>
+### 🛡️ License <a name="license"></a>
 Project is distributed under [MIT License](https://github.com/denred0/image_classification_pytorch/blob/master/LICENSE.txt)
