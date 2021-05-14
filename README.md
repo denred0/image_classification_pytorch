@@ -32,3 +32,6 @@ trainer = ICPTrainer(models=models, data_dir='data_simpsons')
 # start training
 trainer.fit_test()
 ```
+
+## Colab Quick start
+[image_classification_pytorch_get_started.ipynb](https://colab.research.google.com/drive/1M7oJDizCOrFTDJz0CaDy-ClvDMUvmlnv?usp=sharing)
