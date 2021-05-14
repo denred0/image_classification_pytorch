@@ -1,9 +1,6 @@
 # Image Classification PyTorch
 
-Use pretrained models to train your data.
-
-
-
+Library for quick training models for image classification.
 
 
 ## :closed_book: Table of content
