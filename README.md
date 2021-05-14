@@ -40,8 +40,8 @@ trainer = ICPTrainer(models=models, data_dir='my_data')
 trainer.fit_test()
 ```
 
-#### Colab Example 
-[](https://github.com/catalyst-team/catalyst/blob/master/examples/notebooks/segmentation-tutorial.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/catalyst-team/catalyst/blob/master/examples/notebooks/segmentation-tutorial.ipynb)
+#### Example 
+[Simple example of training and prediction](https://github.com/denred0/image_classification_pytorch/blob/master/examples/image_classification_pytorch_get_started.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1M7oJDizCOrFTDJz0CaDy-ClvDMUvmlnv?usp=sharing)
 
 ---
 
@@ -64,9 +64,3 @@ Prepare data for training in the following format
 
 ## 🛡️ License <a name="license"></a>
 Project is distributed under [MIT License](https://github.com/denred0/image_classification_pytorch/blob/master/LICENSE.txt)
-
-
-
-
-## Colab Quick start
-[image_classification_pytorch_get_started.ipynb](https://colab.research.google.com/drive/1M7oJDizCOrFTDJz0CaDy-ClvDMUvmlnv?usp=sharing)
