@@ -8,17 +8,21 @@ Use pretrained models to train your data.
 pip install image-classification-pytorch
 ```
 
-## Models
+## :clipboard: What's New
 
-## Data preparation
+## :closed_book: Table of content
 
-## Inference
+## ✨ Quick start
 
-## Table of content
+## :telescope: Inference
 
-## License
+## :chart_with_downwards_trend: Models
 
-## ✨ Quick start 
+## :file_folder: Data preparation
+
+## 🛡️ License
+
+
 
 
 ```python
