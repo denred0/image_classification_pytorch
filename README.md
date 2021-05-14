@@ -23,8 +23,9 @@ Use pretrained models to train your data.
 ```python
 pip install image-classification-pytorch
 ```
+---
 
-## ✨ Quick start <a name="quick-start"></a>
+## ✨ Quick Start <a name="quick-start"></a>
 
 ```python
 import image_classification_pytorch as icp
@@ -39,10 +40,24 @@ trainer = ICPTrainer(models=models, data_dir='my_data')
 trainer.fit_test()
 ```
 
+#### Colab Example 
+[](https://github.com/catalyst-team/catalyst/blob/master/examples/notebooks/segmentation-tutorial.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/catalyst-team/catalyst/blob/master/examples/notebooks/segmentation-tutorial.ipynb)
+
+---
+
 ## :telescope: Prediction <a name="prediction"></a>
 
-## :file_folder: Data preparation <a name="data-preparation"></a>
+## :file_folder: Data Preparation <a name="data-preparation"></a>
+Prepare data for training in the following format
 
+    ├── animals                      # Data folder
+        ├── dogs                     # Folder Class 1
+        ├── cats                     # Folder Class 2
+        ├── gray_bears               # Folder Class 3
+        ├── zebras                   # Folder Class 4
+        ├── ...
+ 
+---
 ## :chart_with_downwards_trend: Models <a name="models"></a>
 
 
