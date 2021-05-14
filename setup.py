@@ -17,7 +17,7 @@ setup(
   author = 'Denis Potapov',                   # Type in your name
   author_email = 'potapovdenisdmit@gmail.com',      # Type in your E-Mail
   url = 'https://github.com/denred0/image_classification_pytorch',   # Provide either the link to your github or to your website
-  download_url = 'https://github.com/denred0/image_classification_pytorch/archive/refs/tags/0.0.1.tar.gz',    # I explain this later on
+  download_url = 'https://github.com/denred0/image_classification_pytorch/archive/refs/tags/0.0.9.tar.gz',    # I explain this later on
   keywords = ['pytorch', 'image classification', 'imagenet', 'pretrained model'],   # Keywords that define your package best
   install_requires=[            # I get to this in a second
           'numpy',
