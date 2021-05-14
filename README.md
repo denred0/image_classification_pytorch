@@ -2,15 +2,30 @@
 
 Use pretrained models to train your data.
 
+
+
+
+
+## :closed_book: Table of content
+- [What's New](#whats-new)
+- [Introduction](#introduction)
+- [Models](#models)
+- [Features](#features)
+- [Results](#results)
+- [Getting Started (Documentation)](#getting-started-documentation)
+- [Train, Validation, Inference Scripts](#train-validation-inference-scripts)
+- [Awesome PyTorch Resources](#awesome-pytorch-resources)
+- [Licenses](#licenses)
+- [Citing](#citing)
+
+## :clipboard: What's New <a name="whats-new"></a>
+
+
 ## :computer: Installation
 
 ```python
 pip install image-classification-pytorch
 ```
-
-## :clipboard: What's New
-
-## :closed_book: Table of content
 
 ## ✨ Quick start
 
