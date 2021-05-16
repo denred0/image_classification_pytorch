@@ -56,7 +56,49 @@ Prepare data for training in the following format
  
 ---
 ### :chart_with_downwards_trend: Models <a name="models"></a>
+Used models from [PyTorch Image Models](https://github.com/rwightman/pytorch-image-models)
 
+**Models list**
+```python
+import timm
+from pprint import pprint
+model_names = timm.list_models(pretrained=True)
+pprint(model_names)
+>>> ['adv_inception_v3',
+ 'cspdarknet53',
+ 'cspresnext50',
+ 'densenet121',
+ 'densenet161',
+ 'densenet169',
+ 'densenet201',
+ 'densenetblur121d',
+ 'dla34',
+ 'dla46_c',
+...
+]
+```
+
+**Model parameters**
+```python
+import timm
+from pprint import pprint
+model_names = timm.list_models(pretrained=True)
+pprint(model_names)
+>>> ['adv_inception_v3',
+ 'cspdarknet53',
+ 'cspresnext50',
+ 'densenet121',
+ 'densenet161',
+ 'densenet169',
+ 'densenet201',
+ 'densenetblur121d',
+ 'dla34',
+ 'dla46_c',
+...
+]
+```
+
+Timm documentation [here](https://rwightman.github.io/pytorch-image-models/)
 
 
 ### 🛡️ License <a name="license"></a>
