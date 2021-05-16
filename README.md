@@ -4,7 +4,6 @@ Library for quick training models for image classification.
 
 
 ### :closed_book: Table of content
-- [What's New](#whats-new)
 - [Installation](#installation)
 - [Quick start](#quick-start)
 - [Prediction](#prediction)
@@ -12,7 +11,7 @@ Library for quick training models for image classification.
 - [Models](#models)
 - [License](#license)
 
-### :clipboard: What's New <a name="whats-new"></a>
+---
 
 
 ### :computer: Installation <a name="installation"></a>
@@ -99,6 +98,8 @@ pprint(model_names)
 ```
 
 Timm documentation [here](https://rwightman.github.io/pytorch-image-models/)
+
+---
 
 
 ### 🛡️ License <a name="license"></a>
