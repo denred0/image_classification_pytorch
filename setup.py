@@ -1,4 +1,5 @@
 from distutils.core import setup
+import os
 
 # from os import path
 # this_directory = path.abspath(path.dirname(__file__))
@@ -7,6 +8,15 @@ from distutils.core import setup
 
 # with open('README.md') as f:
 #     readme = f.read()
+
+here = os.path.abspath(os.path.dirname(__file__))
+
+# What packages are required for this module to be executed?
+try:
+    with open(os.path.join(here, 'requirements.txt'), encoding='utf-8') as f:
+        REQUIRED = f.read().split('\n')
+except:
+    REQUIRED = []
 
 setup(
   name = 'image_classification_pytorch',         # How you named your package folder (MyLib)
@@ -21,17 +31,7 @@ setup(
   url = 'https://github.com/denred0/image_classification_pytorch',   # Provide either the link to your github or to your website
   download_url = 'https://github.com/denred0/image_classification_pytorch/archive/refs/tags/0.0.1.tar.gz',    # I explain this later on
   keywords = ['pytorch', 'image classification', 'imagenet', 'pretrained model'],   # Keywords that define your package best
-  install_requires=[            # I get to this in a second
-          'numpy',
-          'pytorch_lightning',
-          'torch',
-          'sklearn',
-          'albumentations==0.5.2',
-          'opencv-python',
-          'torchmetrics',
-          'timm',
-          'tqdm',
-      ],
+  install_requires=REQUIRED,
   classifiers=[
     'Development Status :: 3 - Alpha',      # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
     'Intended Audience :: Developers',      # Define that your audience are developers

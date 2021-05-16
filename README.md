@@ -82,7 +82,7 @@ pprint(model_names)
 import timm
 from pprint import pprint
 m = timm.create_model('efficientnet_b0', pretrained=True)
-pprint(m.default_cfg
+pprint(m.default_cfg)
 ```
 
 Timm documentation [here](https://rwightman.github.io/pytorch-image-models/)
