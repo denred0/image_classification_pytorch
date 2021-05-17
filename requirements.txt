@@ -1,9 +1,9 @@
-albumentations==0.5.2
-numpy==1.20.3
-opencv-python==4.5.2.52
 pytorch-lightning==1.2.10
+albumentations==0.5.1
+numpy==1.20.2
+opencv-python==4.5.1.48
 sklearn==0.0
 timm==0.4.5
 torch==1.8.1
-torchmetrics==0.3.2
+torchmetrics==0.20
 tqdm==4.60.0
