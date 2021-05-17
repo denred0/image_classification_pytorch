@@ -21,7 +21,7 @@ except:
 setup(
   name = 'image_classification_pytorch',         # How you named your package folder (MyLib)
   packages = ['image_classification_pytorch'],   # Chose the same as "name"
-  version = '0.0.12',      # Start with a small number and increase it with every change you make
+  version = '0.0.13',      # Start with a small number and increase it with every change you make
   license='MIT',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
   description = 'Image classification with pretrained models in Pytorch',   # Give a short description about your library
   long_description = "See description on GitHub",
