@@ -54,7 +54,9 @@ Example of folders structure
 
 Use the same parameters as for training.
 ```python
-ICPInference(data_dir='inference',
+import image_classification_pytorch as icp
+
+icp.ICPInference(data_dir='inference',
                  img_size=380,
                  show_accuracy=True,
                  checkpoint='tb_logs/tf_efficientnet_b4_ns/version_4/checkpoints/tf_efficientnet_b4_ns__epoch=2_val_loss=0.922_val_acc=0.830_val_f1_epoch=0.000.ckpt',
