@@ -43,6 +43,39 @@ trainer.fit_test()
 
 ### :telescope: Prediction <a name="prediction"></a>
 
+Put folders with samples in a folder (data_dir). You can use class labels for folder names.
+
+Example of folders structure
+
+    ├── inference                    # data_dir folder
+        ├── dogs                     # Folder Class 1
+        ├── cats                     # Folder Class 2
+
+
+Use the same parameters as for training.
+```python
+ICPInference(data_dir='inference',
+                 img_size=380,
+                 show_accuracy=True,
+                 checkpoint='tb_logs/tf_efficientnet_b4_ns/version_4/checkpoints/tf_efficientnet_b4_ns__epoch=2_val_loss=0.922_val_acc=0.830_val_f1_epoch=0.000.ckpt',
+                 std=[0.229, 0.224, 0.225],
+                 mean=[0.485, 0.456, 0.406],
+                 confidence_threshold=1).predict()
+```
+
+After prediction you can see such folders structure
+
+    ├── inference                    # data_dir folder
+        ├── dogs                     # Initial dogs folder 
+        ├── dogs_gt___dogs           # In this folder should be dogs pictures (ground truth(gt) dogs) and they predicted as dogs
+        ├── dogs_gt___cats           # In this folder should be dogs pictures (ground truth(gt) dogs) but they predicted as cats
+        ├── cats                     # Initial cats folder
+        ├── cats_gt___cats           # In this folder should be cats pictures (ground truth(gt) cats) and they predicted as cats
+
+As you can see all cats predicted as cats and some dogs predicted as cats. 
+
+---
+
 ### :file_folder: Data Preparation <a name="data-preparation"></a>
 Prepare data for training in the following format
 
