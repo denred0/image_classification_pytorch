@@ -1,5 +1,6 @@
 from image_classification_pytorch.datamodule import ICPDataModule
 from image_classification_pytorch.model import ICPModel
+from image_classification_pytorch.inference import ICPInference
 
 from pathlib import Path
 
@@ -138,5 +139,16 @@ def main():
     trainer.fit_test()
 
 
+def inference():
+    ICPInference(data_dir='inference',
+                 img_size=380,
+                 show_accuracy=True,
+                 checkpoint='tb_logs/tf_efficientnet_b4_ns/version_4/checkpoints/tf_efficientnet_b4_ns__epoch=2_val_loss=0.922_val_acc=0.830_val_f1_epoch=0.000.ckpt',
+                 std=[0.229, 0.224, 0.225],
+                 mean=[0.485, 0.456, 0.406],
+                 confidence_threshold=1).predict()
+
+
 if __name__ == '__main__':
-    main()
+    # main()
+    inference()

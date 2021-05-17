@@ -6,6 +6,8 @@ import cv2
 import pickle
 import shutil
 from pathlib import Path
+from time import sleep
+
 
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
@@ -13,7 +15,7 @@ from albumentations.pytorch import ToTensorV2
 import torch
 from torch.utils.data import Dataset, DataLoader
 
-import tqdm
+from tqdm import tqdm
 
 
 class InferenceDataset(Dataset):
@@ -61,7 +63,7 @@ class ICPInference():
         self.confidence_threshold = confidence_threshold,
         self.show_accuracy = show_accuracy
 
-        model = ICPModel.load_from_checkpoint(checkpoint_path=self.checkpoint)
+        model = ICPModel.load_from_checkpoint(checkpoint_path=self.checkpoint[0])
         model = model.to("cuda")
         model.eval()
         model.freeze()
@@ -73,12 +75,14 @@ class ICPInference():
     def predict(self):
         all_files = 0
         false_files = 0
-        for subdir, dirs, files in tqdm(os.walk(self.data_dir)):
+        for subdir, dirs, files in os.walk(self.data_dir):
             for folder in dirs:
-                p = self.data_dir + folder + '/'
+                p = os.path.join(self.data_dir, folder) + os.path.sep
+
                 _, _, images_list = next(walk(p))
 
-                test_dataset = InferenceDataset(path=self.data_dir + folder + '/', image_ids=images_list,
+                test_dataset = InferenceDataset(path=p,
+                                                image_ids=images_list,
                                                 img_size=self.img_size,
                                                 mean=self.mean, std=self.std)
                 test_loader = DataLoader(test_dataset, batch_size=1)
@@ -88,7 +92,8 @@ class ICPInference():
                 else:
                     gt = 99999
 
-                for data in test_loader:
+                for i, data in enumerate(tqdm(test_loader)):
+                    # sleep(0.01)
 
                     all_files += 1
 
@@ -122,13 +127,13 @@ class ICPInference():
                     y_hat = y_hat.cpu().detach().numpy()[0]
                     if y_hat == gt:
                         new_folder = folder + '_gt____' + folder
-                        path = self.data_dir + new_folder
+                        path = os.path.join(self.data_dir, new_folder)
                         Path(path).mkdir(parents=True, exist_ok=True)
 
-                        sourcepath = self.data_dir + folder
-                        destinationpath = self.data_dir + new_folder
+                        sourcepath = os.path.join(self.data_dir, folder)
+                        destinationpath = os.path.join(self.data_dir, new_folder)
 
-                        if confidence >= self.confidence_threshold:
+                        if confidence >= self.confidence_threshold[0]:
                             shutil.copy(os.path.join(sourcepath, file), os.path.join(destinationpath, file))
                         else:
                             file_not_conf = 'not_confident___' + class1 + '__or__' + class2 + '___' + file
@@ -136,20 +141,21 @@ class ICPInference():
                     else:
                         false_files += 1
 
-                        new_folder = folder + '_gt____' + label_encoder.classes_[y_hat]
-                        path = self.data_dir + new_folder
+                        new_folder = folder + '_gt____' + self.label_encoder.classes_[y_hat]
+                        path = os.path.join(self.data_dir, new_folder)
                         Path(path).mkdir(parents=True, exist_ok=True)
 
-                        sourcepath = self.data_dir + folder
-                        destinationpath = self.data_dir + new_folder
-                        if confidence >= self.confidence_threshold:
+                        sourcepath = os.path.join(self.data_dir, folder)
+                        destinationpath = os.path.join(self.data_dir, new_folder)
+
+                        if confidence >= self.confidence_threshold[0]:
                             shutil.copy(os.path.join(sourcepath, file), os.path.join(destinationpath, file))
                         else:
                             file_not_conf = 'not_confident___' + class1 + '__or__' + class2 + '___' + file
                             shutil.copy(os.path.join(sourcepath, file), os.path.join(destinationpath, file_not_conf))
 
-                    if self.show_accuracy:
-                        false_percent = 1 - false_files / all_files
-                        print('Total images:', all_files)
-                        print('False images:', false_files)
-                        print("Accuracy: " + "{:.4f}".format(false_percent))
+        if self.show_accuracy:
+            false_percent = 1 - false_files / all_files
+            print('Total images:', all_files)
+            print('False images:', false_files)
+            print("Accuracy: " + "{:.4f}".format(false_percent))
