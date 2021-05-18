@@ -3,7 +3,7 @@
 Library for quick training models for image classification.
 
 
-### Table of content
+## Table of content
 - [Installation](#installation)
 - [Quick start](#quick-start)
 - [Prediction](#prediction)
@@ -15,14 +15,14 @@ Library for quick training models for image classification.
 ---
 
 
-### Installation <a name="installation"></a>
+## Installation <a name="installation"></a>
 
 ```python
 pip install image-classification-pytorch
 ```
 ---
 
-### Quick Start <a name="quick-start"></a>
+## Quick Start <a name="quick-start"></a>
 
 ```python
 import image_classification_pytorch as icp
@@ -43,7 +43,7 @@ trainer.fit_test()
 
 ---
 
-### Prediction <a name="prediction"></a>
+## Prediction <a name="prediction"></a>
 
 Put folders with samples in a folder (data_dir). You can use class labels for folder names.
 
@@ -80,7 +80,7 @@ As you can see all cats predicted as cats and some dogs predicted as cats.
 
 ---
 
-### Data Preparation <a name="data-preparation"></a>
+## Data Preparation <a name="data-preparation"></a>
 Prepare data for training in the following format
 
     ├── animals                      # Data folder
@@ -92,7 +92,7 @@ Prepare data for training in the following format
  
 ---
 
-### Parameters <a name="parameters"></a>
+## Parameters <a name="parameters"></a>
 
 ```python
 
@@ -100,7 +100,7 @@ Prepare data for training in the following format
 
 ---
 
-### Models <a name="models"></a>
+## Models <a name="models"></a>
 Used models from [PyTorch Image Models](https://github.com/rwightman/pytorch-image-models)
 
 **List Models**
@@ -136,5 +136,5 @@ Timm documentation [here](https://rwightman.github.io/pytorch-image-models/)
 ---
 
 
-### License <a name="license"></a>
+## License <a name="license"></a>
 Project is distributed under [MIT License](https://github.com/denred0/image_classification_pytorch/blob/master/LICENSE.txt)
