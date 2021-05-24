@@ -3,3 +3,5 @@ from image_classification_pytorch.datamodule import ICPDataModule
 from image_classification_pytorch.dataset import ICPDataset
 from image_classification_pytorch.train import ICPTrainer
 from image_classification_pytorch.inference import ICPInference
+from image_classification_pytorch.schedulers import *
+from image_classification_pytorch.optimizers import *

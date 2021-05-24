@@ -10,7 +10,12 @@ import timm
 
 
 class ICPModel(pl.LightningModule):
-    def __init__(self, model_type, num_classes, learning_rate=0.0001):
+    def __init__(self,
+                 model_type,
+                 num_classes,
+                 optimizer,
+                 scheduler,
+                 learning_rate=0.0001):
         super().__init__()
 
         # log hyperparameters
@@ -18,6 +23,11 @@ class ICPModel(pl.LightningModule):
 
         self.learning_rate = learning_rate
         self.num_classes = num_classes
+        self.optimizer = optimizer
+        self.scheduler = scheduler
+
+        self.optimizers = ['Adam()']
+        self.schedulers = ['ExponentialLR()']
 
         # load network
         if model_type in ['tf_efficientnet_b0_ns', 'tf_efficientnet_b3_ns', 'tf_efficientnet_b4_ns',
@@ -101,8 +111,28 @@ class ICPModel(pl.LightningModule):
     #     self.f1.reset()
 
     def configure_optimizers(self):
-        gen_opt = torch.optim.Adam(self.parameters(), lr=self.learning_rate)
 
-        gen_sched = {'scheduler': torch.optim.lr_scheduler.ExponentialLR(gen_opt, gamma=0.999, verbose=False),
-                     'interval': 'step'}
+        if type(self.optimizer).__name__ == 'Adam':
+            gen_opt = torch.optim.Adam(self.parameters(),
+                                       lr=self.learning_rate,
+                                       betas=self.optimizer.betas,
+                                       eps=self.optimizer.eps,
+                                       weight_decay=self.optimizer.weight_decay,
+                                       amsgrad=self.optimizer.amsgrad)
+        else:
+            assert (
+                False
+            ), f"Optimizer '{self.optimizer}' not recognized. Please, choose from {self.optimizers}"
+
+        if type(self.scheduler).__name__ == 'ExponentialLR':
+            gen_sched = {'scheduler': torch.optim.lr_scheduler.ExponentialLR(gen_opt,
+                                                                             gamma=self.scheduler.gamma,
+                                                                             last_epoch=self.scheduler.last_epoch,
+                                                                             verbose=self.scheduler.verbose),
+                         'interval': self.scheduler.interval}
+        else:
+            assert (
+                False
+            ), f"Scheduler '{self.scheduler}' not recognized. Please, choose from {self.schedulers}"
+
         return [gen_opt], [gen_sched]

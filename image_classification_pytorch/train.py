@@ -1,6 +1,8 @@
 from image_classification_pytorch.datamodule import ICPDataModule
 from image_classification_pytorch.model import ICPModel
 from image_classification_pytorch.inference import ICPInference
+from image_classification_pytorch.optimizers import Adam
+from image_classification_pytorch.schedulers import ExponentialLR
 
 from pathlib import Path
 
@@ -22,7 +24,9 @@ class ICPTrainer():
                  max_epochs=500,
                  augment_p=0.7,
                  progress_bar_refresh_rate=10,
-                 early_stop_patience=6):
+                 early_stop_patience=6,
+                 optimizer=Adam(),
+                 scheduler=ExponentialLR()):
         super().__init__()
         self.models = models
         self.data_dir = data_dir
@@ -33,6 +37,8 @@ class ICPTrainer():
         self.augment_p = augment_p
         self.progress_bar_refresh_rate = progress_bar_refresh_rate
         self.early_stop_patience = early_stop_patience
+        self.optimizer = optimizer
+        self.scheduler = scheduler
 
         self.models_for_training = []
         for m in self.models:
@@ -53,7 +59,11 @@ class ICPTrainer():
             dm.setup()
 
             # Init our model
-            model = ICPModel(model_data['model']['model_type'], dm.num_classes, learning_rate=self.init_lr)
+            model = ICPModel(model_type=model_data['model']['model_type'],
+                             num_classes=dm.num_classes,
+                             optimizer=self.optimizer,
+                             scheduler=self.scheduler,
+                             learning_rate=self.init_lr)
 
             # Initialize a trainer
             early_stop_callback = EarlyStopping(
@@ -150,5 +160,5 @@ def inference():
 
 
 if __name__ == '__main__':
-    # main()
-    inference()
+    main()
+    # inference()
