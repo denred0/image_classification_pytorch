@@ -51,7 +51,7 @@ trainer.fit_test()
 
 ## Prediction <a name="prediction"></a>
 
-Put folders with samples in a folder (data_dir). You can use class labels for folder names.
+Put folders with samples into a folder (data_dir). You can use class labels for folder names.
 
 Example of folders structure
 
@@ -495,7 +495,7 @@ pprint(model_names)
 ]
 ```
 
-**Get Model parameters**
+**Get Model Parameters**
 ```python
 import timm
 from pprint import pprint
