@@ -5,3 +5,4 @@ from image_classification_pytorch.train import ICPTrainer
 from image_classification_pytorch.inference import ICPInference
 from image_classification_pytorch.schedulers import *
 from image_classification_pytorch.optimizers import *
+from image_classification_pytorch.dict import *

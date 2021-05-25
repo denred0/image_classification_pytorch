@@ -136,14 +136,14 @@ class ICPTrainer():
 
 
 def main():
-    tf_efficientnet_b4_ns = {'model_type': 'tf_efficientnet_b4_ns',
-                             'im_size': 380,
-                             'im_size_test': 380,
-                             'batch_size': 8,
-                             'mean': [0.485, 0.456, 0.406],
-                             'std': [0.229, 0.224, 0.225]}
+    ens_adv_inception_resnet_v2 = {'model_type': 'ens_adv_inception_resnet_v2',
+                                   'im_size': 256,
+                                   'im_size_test': 256,
+                                   'batch_size': 8,
+                                   'mean': [0.5, 0.5, 0.5],
+                                   'std': [0.5, 0.5, 0.5]}
 
-    models = [tf_efficientnet_b4_ns]
+    models = [ens_adv_inception_resnet_v2]
 
     trainer = ICPTrainer(models=models, data_dir='data_simpsons')
     trainer.fit_test()
