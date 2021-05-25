@@ -29,7 +29,13 @@ import image_classification_pytorch as icp
 
 # add model
 # your can add several models for consistent training
-tf_efficientnet_b4_ns = {'model_type': 'tf_efficientnet_b4_ns', 'im_size': 380, 'im_size_test': 380, 'batch_size': 8, 'mean': [0.485, 0.456, 0.406], 'std': [0.229, 0.224, 0.225]}
+tf_efficientnet_b4_ns = {'model_type': 'tf_efficientnet_b4_ns', 
+                         'im_size': 380, 
+                         'im_size_test': 380, 
+                         'batch_size': 8, 
+                         'mean': [0.485, 0.456, 0.406], 
+                         'std': [0.229, 0.224, 0.225]}
+                         
 models = [tf_efficientnet_b4_ns]
 
 # create trainer
@@ -92,10 +98,43 @@ Prepare data for training in the following format
  
 ---
 
-## Parameters <a name="parameters"></a>
+## Detailed Quick Start <a name="parameters"></a>
 
 ```python
+import image_classification_pytorch as icp
 
+# add model
+# your can add several models for consistent training
+tf_efficientnet_b4_ns = {'model_type': 'tf_efficientnet_b4_ns', 
+                         'im_size': 380, 
+                         'im_size_test': 380, 
+                         'batch_size': 8, 
+                         'mean': [0.485, 0.456, 0.406], 
+                         'std': [0.229, 0.224, 0.225]}
+                         
+ens_adv_inception_resnet_v2 = {'model_type': 'ens_adv_inception_resnet_v2',
+                               'im_size': 256,
+                               'im_size_test': 256,
+                               'batch_size': 8,
+                               'mean': [0.5, 0.5, 0.5],
+                               'std': [0.5, 0.5, 0.5]}
+                         
+models = [tf_efficientnet_b4_ns, ens_adv_inception_resnet_v2]
+
+# create trainer
+trainer = ICPTrainer(models=models, 
+                     data_dir='my_data',
+                     images_ext='jpg',
+                     init_lr=1e-5,
+                     max_epochs=500,
+                     augment_p=0.7,
+                     progress_bar_refresh_rate=10,
+                     early_stop_patience=6,
+                     optimizer=Adam(),
+                     scheduler=ExponentialLR())
+
+# start training
+trainer.fit_test()
 ```
 
 ---
