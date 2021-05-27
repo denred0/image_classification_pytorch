@@ -136,16 +136,33 @@ class ICPTrainer():
 
 
 def main():
-    ens_adv_inception_resnet_v2 = {'model_type': 'ens_adv_inception_resnet_v2',
-                                   'im_size': 256,
-                                   'im_size_test': 256,
-                                   'batch_size': 8,
-                                   'mean': [0.5, 0.5, 0.5],
-                                   'std': [0.5, 0.5, 0.5]}
+    vgg16 = {'model_type': 'vgg16',
+             'im_size': 224,
+             'im_size_test': 224,
+             'batch_size': 8,
+             'mean': [0.485, 0.456, 0.406],
+             'std': [0.229, 0.224, 0.225]}
 
-    models = [ens_adv_inception_resnet_v2]
+    inception_v4 = {'model_type': 'inception_v4',
+                    'im_size': 299,
+                    'im_size_test': 299,
+                    'batch_size': 8,
+                    'mean': [0.5, 0.5, 0.5],
+                    'std': [0.5, 0.5, 0.5]}
 
-    trainer = ICPTrainer(models=models, data_dir='data_simpsons')
+    inception_v3 = {'model_type': 'inception_v3',
+                    'im_size': 299,
+                    'im_size_test': 299,
+                    'batch_size': 8,
+                    'mean': [0.5, 0.5, 0.5],
+                    'std': [0.5, 0.5, 0.5]}
+
+    models = [inception_v3]
+
+    trainer = ICPTrainer(models=models,
+                         data_dir='data_simpsons',
+                         max_epochs=5)
+
     trainer.fit_test()
 
 
