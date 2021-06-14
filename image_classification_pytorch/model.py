@@ -335,7 +335,7 @@ class ICPModel(pl.LightningModule):
             model.classifier = nn.Linear(in_features, self.num_classes)
             self.model = model
         elif self.model_type in ['ens_adv_inception_resnet_v2',  # classif
-                                 'inception_resnet_v2',]:
+                                 'inception_resnet_v2', ]:
             model = timm.create_model(model_type, pretrained=True)
             in_features = model.classif.in_features
             model.classifier = nn.Linear(in_features, self.num_classes)
@@ -396,6 +396,10 @@ class ICPModel(pl.LightningModule):
     def forward(self, x):
         return self.model(x)
 
+    # Using custom or multiple metrics (default_hp_metric=False)
+    def on_train_start(self):
+        self.logger.log_hyperparams(self.hparams)
+
     # logic for a single training step
     def training_step(self, batch, batch_idx):
 
@@ -407,8 +411,8 @@ class ICPModel(pl.LightningModule):
         output = torch.argmax(output, dim=1)
         acc = accuracy(output, y)
 
-        self.log('train_loss', train_loss, on_step=True, on_epoch=True, logger=True)
-        self.log('train_acc', acc, on_step=True, on_epoch=True, logger=True)
+        self.log('train_loss', train_loss, prog_bar=True)
+        self.log('train_acc', acc, prog_bar=True)
 
         return train_loss
 
