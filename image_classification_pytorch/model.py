@@ -390,7 +390,7 @@ class ICPModel(pl.LightningModule):
         self.f1 = torchmetrics.F1(num_classes=self.num_classes)
 
     def loss(self, logits, labels):
-        return self.loss_func(input=logits, target=labels)
+        return self.loss_func(input=logits, target=labels.long())
 
     # will be used during inference
     def forward(self, x):
@@ -409,6 +409,7 @@ class ICPModel(pl.LightningModule):
 
         # training metrics
         output = torch.argmax(output, dim=1)
+
         acc = accuracy(output, y)
 
         self.log('train_loss', train_loss, prog_bar=True)

@@ -145,7 +145,7 @@ def main():
 
     models = [ens_adv_inception_resnet_v2]
 
-    trainer = ICPTrainer(models=models, data_dir='data_simpsons')
+    trainer = ICPTrainer(models=models, data_dir='data')
     trainer.fit_test()
 
 
