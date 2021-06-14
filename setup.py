@@ -21,7 +21,7 @@ except:
 setup(
     name='image_classification_pytorch',  # How you named your package folder (MyLib)
     packages=['image_classification_pytorch'],  # Chose the same as "name"
-    version='0.0.18',  # Start with a small number and increase it with every change you make
+    version='0.0.19',  # Start with a small number and increase it with every change you make
     license='MIT',  # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     description='Image classification with pretrained models in Pytorch',  # Give a short description about your library
     long_description="See description on GitHub",
@@ -30,7 +30,7 @@ setup(
     author_email='potapovdenisdmit@gmail.com',  # Type in your E-Mail
     url='https://github.com/denred0/image_classification_pytorch',
     # Provide either the link to your github or to your website
-    download_url='https://github.com/denred0/image_classification_pytorch/archive/refs/tags/0.0.18.tar.gz',
+    download_url='https://github.com/denred0/image_classification_pytorch/archive/refs/tags/0.0.19.tar.gz',
     # I explain this later on
     keywords=['pytorch', 'image classification', 'imagenet', 'pretrained model'],
     # Keywords that define your package best
