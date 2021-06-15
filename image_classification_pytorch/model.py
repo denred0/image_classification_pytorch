@@ -7,6 +7,7 @@ from pytorch_lightning.metrics.functional import accuracy
 import torchmetrics
 
 import timm
+import pretrainedmodels
 
 from image_classification_pytorch.dict import *
 
@@ -17,6 +18,7 @@ class ICPModel(pl.LightningModule):
                  num_classes,
                  optimizer,
                  scheduler,
+                 classes_weights,
                  learning_rate=0.0001):
         super().__init__()
 
@@ -31,6 +33,12 @@ class ICPModel(pl.LightningModule):
 
         self.optimizers = optimizer
         self.schedulers = scheduler
+        self.classes_weigts = classes_weights
+        print('classes_weights', classes_weights)
+        self.classes_weigts = torch.FloatTensor(self.classes_weigts).cuda()
+
+        self.loss_func = nn.CrossEntropyLoss(weight=self.classes_weigts)
+        self.f1 = torchmetrics.F1(num_classes=self.num_classes)
 
         # load network
         if self.model_type in ['densenet121',  # classifier
@@ -381,13 +389,17 @@ class ICPModel(pl.LightningModule):
             in_features = model.head.in_features
             model.classifier = nn.Linear(in_features, self.num_classes)
             self.model = model
+        elif self.model_type in ['senet154']:
+            model = pretrainedmodels.__dict__[model_type](num_classes=1000, pretrained='imagenet')
+            model.eval()
+            num_features = model.last_linear.in_features
+            # Заменяем Fully-Connected слой на наш линейный классификатор
+            model.last_linear = nn.Linear(num_features, self.num_classes)
+            self.model = model
         else:
             assert (
                 False
             ), f"model_type '{self.model_type}' not implemented. Please, choose from {MODELS}"
-
-        self.loss_func = nn.CrossEntropyLoss()
-        self.f1 = torchmetrics.F1(num_classes=self.num_classes)
 
     def loss(self, logits, labels):
         return self.loss_func(input=logits, target=labels)
@@ -402,7 +414,6 @@ class ICPModel(pl.LightningModule):
 
     # logic for a single training step
     def training_step(self, batch, batch_idx):
-
         x, y = batch
         output = self.forward(x)
         train_loss = self.loss(output, y)

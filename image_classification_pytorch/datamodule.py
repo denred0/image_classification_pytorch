@@ -13,6 +13,8 @@ import pytorch_lightning as pl
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 
+from collections import Counter
+
 from pathlib import Path
 
 
@@ -92,6 +94,9 @@ class ICPDataModule(pl.LightningDataModule):
         train_labels = [path.parent.name for path in train_files]
         train_labels = label_encoder.transform(train_labels)
         train_data = train_files, train_labels
+
+        self.classes_weigts = [round(x / sum(list(Counter(sorted(train_labels)).values())), 2) for x in
+                               list(Counter(sorted(train_labels)).values())]
 
         # without test step
         # val_labels = [path.parent.name for path in val_test_files]

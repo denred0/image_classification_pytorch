@@ -63,6 +63,7 @@ class ICPTrainer():
                              num_classes=dm.num_classes,
                              optimizer=self.optimizer,
                              scheduler=self.scheduler,
+                             classes_weights=dm.classes_weigts,
                              learning_rate=self.init_lr)
 
             # Initialize a trainer
@@ -77,7 +78,7 @@ class ICPTrainer():
             experiment_name = model_data['model']['model_type']
             logger = TensorBoardLogger('tb_logs/', name=experiment_name)
 
-            checkpoint_name = experiment_name + '_' + '_{epoch}_{val_loss:.3f}_{val_acc:.3f}_{val_f1_epoch:.3f}'
+            checkpoint_name = experiment_name + '_' + '_{epoch}_{val_loss:.3f}_{val_acc:.3f}'
 
             checkpoint_callback_loss = ModelCheckpoint(monitor='val_loss',
                                                        mode='min',
@@ -143,6 +144,13 @@ def main():
              'mean': [0.485, 0.456, 0.406],
              'std': [0.229, 0.224, 0.225]}
 
+    vgg16_bn = {'model_type': 'vgg16_bn',
+                'mean': [0.485, 0.456, 0.406],
+                'std': [0.229, 0.224, 0.225],
+                'im_size': 224,
+                'im_size_test': 224,
+                'batch_size': 16}
+
     inception_v4 = {'model_type': 'inception_v4',
                     'im_size': 299,
                     'im_size_test': 299,
@@ -157,11 +165,81 @@ def main():
                     'mean': [0.5, 0.5, 0.5],
                     'std': [0.5, 0.5, 0.5]}
 
-    models = [inception_v3]
+    senet154 = {'model_type': 'senet154',
+                'mean': [0.485, 0.456, 0.406],
+                'std': [0.229, 0.224, 0.225],
+                'im_size': 224,
+                'im_size_test': 224,
+                'batch_size': 16}
+
+    inceptionv4 = {'model_type': 'inceptionv4',
+                   'mean': [0.485, 0.456, 0.406],
+                   'std': [0.229, 0.224, 0.225],
+                   'im_size': 299,
+                   'im_size_test': 299,
+                   'batch_size': 16}
+
+    efficientnet_b3 = {'model_type': 'efficientnet-b3',
+                       'mean': [0.485, 0.456, 0.406],
+                       'std': [0.229, 0.224, 0.225],
+                       'im_size': 512,
+                       'im_size_test': 512,
+                       'batch_size': 8}
+
+    efficientnet_b4 = {'model_type': 'efficientnet-b4',
+                       'mean': [0.485, 0.456, 0.406],
+                       'std': [0.229, 0.224, 0.225],
+                       'im_size': 512,
+                       'im_size_test': 512,
+                       'batch_size': 6}
+
+    efficientnet_b6 = {'model_type': 'efficientnet-b6',
+                       'mean': [0.485, 0.456, 0.406],
+                       'std': [0.229, 0.224, 0.225],
+                       'im_size': 512,
+                       'im_size_test': 512,
+                       'batch_size': 4}
+
+    dm_nfnet_f4 = {'model_type': 'dm_nfnet_f4',
+                   'mean': [0.485, 0.456, 0.406],
+                   'std': [0.229, 0.224, 0.225],
+                   'im_size': 384,
+                   'im_size_test': 512,
+                   'batch_size': 1}
+
+    tf_efficientnet_b3_ns = {'model_type': 'tf_efficientnet_b3_ns',
+                             'mean': [0.485, 0.456, 0.406],
+                             'std': [0.229, 0.224, 0.225],
+                             'im_size': 300,
+                             'im_size_test': 300,
+                             'batch_size': 16}
+
+    tf_efficientnet_b4_ns = {'model_type': 'tf_efficientnet_b4_ns',
+                             'mean': [0.485, 0.456, 0.406],
+                             'std': [0.229, 0.224, 0.225],
+                             'im_size': 380,
+                             'im_size_test': 380,
+                             'batch_size': 8}
+
+    tf_efficientnet_b5_ns = {'model_type': 'tf_efficientnet_b5_ns',
+                             'mean': [0.485, 0.456, 0.406],
+                             'std': [0.229, 0.224, 0.225],
+                             'im_size': 488,  # 456
+                             'im_size_test': 488,
+                             'batch_size': 5}
+
+    tf_efficientnet_b6_ns = {'model_type': 'tf_efficientnet_b6_ns',
+                             'mean': [0.485, 0.456, 0.406],
+                             'std': [0.229, 0.224, 0.225],
+                             'im_size': 528,
+                             'im_size_test': 528,
+                             'batch_size': 3}
+
+    models = [senet154]
 
     trainer = ICPTrainer(models=models,
-                         data_dir='data_simpsons',
-                         max_epochs=5)
+                         data_dir='data/hands',
+                         max_epochs=100)
 
     trainer.fit_test()
 
