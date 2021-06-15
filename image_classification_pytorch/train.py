@@ -62,6 +62,7 @@ class ICPTrainer():
             model = ICPModel(model_type=model_data['model']['model_type'],
                              num_classes=dm.num_classes,
                              optimizer=self.optimizer,
+                             classes_weights=dm.classes_weights,
                              scheduler=self.scheduler,
                              learning_rate=self.init_lr)
 
@@ -157,10 +158,17 @@ def main():
                     'mean': [0.5, 0.5, 0.5],
                     'std': [0.5, 0.5, 0.5]}
 
-    models = [inception_v3]
+    senet154 = {'model_type': 'senet154',
+                'mean': [0.485, 0.456, 0.406],
+                'std': [0.229, 0.224, 0.225],
+                'im_size': 224,
+                'im_size_test': 224,
+                'batch_size': 16}
+
+    models = [senet154]
 
     trainer = ICPTrainer(models=models,
-                         data_dir='data_simpsons',
+                         data_dir='data/data_simpsons',
                          max_epochs=5)
 
     trainer.fit_test()

@@ -33,12 +33,6 @@ class ICPModel(pl.LightningModule):
 
         self.optimizers = optimizer
         self.schedulers = scheduler
-        self.classes_weigts = classes_weights
-        print('classes_weights', classes_weights)
-        self.classes_weigts = torch.FloatTensor(self.classes_weigts).cuda()
-
-        self.loss_func = nn.CrossEntropyLoss(weight=self.classes_weigts)
-        self.f1 = torchmetrics.F1(num_classes=self.num_classes)
 
         # load network
         if self.model_type in ['densenet121',  # classifier
@@ -401,8 +395,15 @@ class ICPModel(pl.LightningModule):
                 False
             ), f"model_type '{self.model_type}' not implemented. Please, choose from {MODELS}"
 
+        self.classes_weights = classes_weights
+        self.classes_weights = torch.FloatTensor(self.classes_weights).cuda()
+        self.loss_func = nn.CrossEntropyLoss(weight=self.classes_weights)
+
+        # self.loss_func = nn.CrossEntropyLoss(weight=self.classes_weigts)
+        self.f1 = torchmetrics.F1(num_classes=self.num_classes)
+
     def loss(self, logits, labels):
-        return self.loss_func(input=logits, target=labels.long())
+        return self.loss_func(input=logits, target=labels)
 
     # will be used during inference
     def forward(self, x):
@@ -420,7 +421,6 @@ class ICPModel(pl.LightningModule):
 
         # training metrics
         output = torch.argmax(output, dim=1)
-
         acc = accuracy(output, y)
 
         self.log('train_loss', train_loss, prog_bar=True)
