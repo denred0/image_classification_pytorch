@@ -402,7 +402,7 @@ class ICPModel(pl.LightningModule):
             ), f"model_type '{self.model_type}' not implemented. Please, choose from {MODELS}"
 
     def loss(self, logits, labels):
-        return self.loss_func(input=logits, target=labels)
+        return self.loss_func(input=logits, target=labels.long())
 
     # will be used during inference
     def forward(self, x):
@@ -420,6 +420,7 @@ class ICPModel(pl.LightningModule):
 
         # training metrics
         output = torch.argmax(output, dim=1)
+
         acc = accuracy(output, y)
 
         self.log('train_loss', train_loss, prog_bar=True)

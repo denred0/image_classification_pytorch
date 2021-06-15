@@ -2,14 +2,11 @@ import timm
 from pprint import pprint
 
 model_names = timm.list_models(pretrained=True)
-# model_names = timm.list_models('*swin*')
 
-# pprint(model_names)
+pprint(model_names)
 
-model = 'swin_base_patch4_window7_224_in22k'
+model = 'inception_v3'
 m = timm.create_model(model, pretrained=True)
 print(model)
 pprint(m.default_cfg)
-
-
 

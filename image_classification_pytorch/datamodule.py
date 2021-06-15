@@ -140,10 +140,10 @@ class ICPDataModule(pl.LightningDataModule):
             self.dims = tuple(self.dataset_test[0][0].shape)
 
     def train_dataloader(self):
-        return DataLoader(self.dataset_train, batch_size=self.batch_size, shuffle=True)
+        return DataLoader(self.dataset_train, batch_size=self.batch_size, shuffle=True, num_workers=4)
 
     def val_dataloader(self):
-        return DataLoader(self.dataset_val, batch_size=self.batch_size)
+        return DataLoader(self.dataset_val, batch_size=self.batch_size, num_workers=4)
 
     def test_dataloader(self):
-        return DataLoader(self.dataset_test, batch_size=self.batch_size)
+        return DataLoader(self.dataset_test, batch_size=self.batch_size, num_workers=4)
