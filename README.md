@@ -39,7 +39,7 @@ tf_efficientnet_b4_ns = {'model_type': 'tf_efficientnet_b4_ns',
 models = [tf_efficientnet_b4_ns]
 
 # create trainer
-trainer = ICPTrainer(models=models, data_dir='my_data')
+trainer = icp.ICPTrainer(models=models, data_dir='my_data')
 # start training
 trainer.fit_test()
 ```
